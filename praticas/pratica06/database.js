@@ -1,7 +1,7 @@
 require('dotenv').config();
 const { MongoClient } = require("mongodb");
 
-const url = `mongodb+srv://edwardcarl:Shablau123@cluster0.5jpdpjr.mongodb.net/`
+const url = `mongodb+srv://@cluster0.5jpdpjr.mongodb.net/`
 
 let db = null;
 
