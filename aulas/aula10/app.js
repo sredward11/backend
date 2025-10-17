@@ -5,7 +5,8 @@ const logger = require("morgan");
 const mongoose = require("mongoose");
 const tarefasRouter = require('./routes/tarefasRouter')
 
-const url = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASS}@${process.env.MONGODB_HOST}/`;
+const url = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASS}@${process
+.env.MONGODB_HOST}/${process.env.MONGODB_DBNAME}`;
 
 mongoose 
   .connect(url)
