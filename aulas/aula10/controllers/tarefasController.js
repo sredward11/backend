@@ -1,6 +1,10 @@
+const mongoose = require('mongoose');
 const Tarefa = require('../models/tarefasModel');
+const e = require('express');
 
 async function criar(req, res) {
+    try {
+    
     const novaTarefa = await Tarefa.create({
         nome: req.body.nome,
         concluida: false
@@ -10,6 +14,12 @@ async function criar(req, res) {
         nome: novaTarefa.nome,
         concluida: novaTarefa.concluida
     });
+  } catch (err) {
+    if (err.errors){
+      return res.status(422).json({msg: err.errors['nome'].message});
+    }
+  }
+  
 }
 
 async function listar(req, res, next) {
@@ -19,6 +29,10 @@ async function listar(req, res, next) {
 
 async function buscar(req, res, next) {
     const { id } = req.params;
+
+    if(!mongoose.Types.ObjectId.isValid(id)){
+        return res.status(400).json({msg: "ID invalido"});
+    }
     const tarefaEncontrada = await Tarefa.findOne({ _id: id });
     if (tarefaEncontrada) {
        req.tarefa = {
@@ -36,10 +50,12 @@ function exibir(req, res) {
 }
 
 async function atualizar(req, res) {
-    const { id } = req.params;
+    try{
+      const { id } = req.params;
     const tarefaAtualizada = await Tarefa.findOneAndUpdate(
         { _id: id },
-        { ...req.body}
+        { ...req.body},
+        { new: true, runValidators: true }
     );
 
     return res.json({
@@ -48,6 +64,11 @@ async function atualizar(req, res) {
          concluida: tarefaAtualizada.concluida,
     
     });
+  }catch (err) {
+    if (err.errors){
+      return res.status(422).json({msg: err.errors['nome'].message});
+    }
+  }
 }
 
 async function remover(req, res) {
